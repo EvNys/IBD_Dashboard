@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Topbar } from "../components/layout/Topbar";
 import { TabAnalytics } from "../components/analytics/TabAnalytics";
-import { TabAlunos } from "@/components/alunos/TabAlunos";
+import { TabAlunos }  from "../components/alunos/TabAlunos";
 import { AlunoModal } from "@/components/modal/AlunoModal";
 
 export default function Dashboard() {

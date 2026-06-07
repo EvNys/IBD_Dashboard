@@ -2,10 +2,11 @@
 
 import { Search, Eye, Accessibility, HeartHandshake } from "lucide-react";
 import { C } from "@/constants/theme";
-import { Avatar }      from "@/components/ui/Avatar";
-import { Badge }       from "@/components/ui/Badge";
+import { Avatar }  from "@/components/ui/Avatar";
+import { Badge }  from "@/components/ui/Badge";
 import { Pagination }  from "@/components/ui/Pagination";
-import { useAlunosFiltrados } from "@/hooks/useAlunosFiltrados";
+import useDadosBanco from "@/hooks/useDadosBanco";
+import React, { useState, useEffect} from "react";
 
 function FilterButton({ active, onClick, icon: Icon, label }) {
   return (
@@ -24,6 +25,17 @@ function FilterButton({ active, onClick, icon: Icon, label }) {
   );
 }
 
+function formatTelefone(tel) {
+  if (!tel) return "—";
+  const numeros = tel.replace(/\D/g, "");
+  if (numeros.length === 11) {
+    return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`;
+  }
+  return tel;
+}
+
+export function TabAlunos({ onOpen }) {
+
 function AlunoRow({ aluno, onOpen }) {
   return (
     <tr
@@ -39,10 +51,10 @@ function AlunoRow({ aluno, onOpen }) {
         </div>
       </td>
       <td style={{ padding: "11px 14px", color: "#6B7280" }}>{aluno.email}</td>
-      <td style={{ padding: "11px 14px", color: "#6B7280" }}>{aluno.telefone}</td>
+      <td style={{ padding: "11px 14px", color: "#6B7280" }}>{formatTelefone(aluno.telefone)}</td>
       <td style={{ padding: "11px 14px" }}>
-        {aluno.pcd && <Badge label="PCD"    type="amber" style={{ marginRight: 4 }} />}
-        {aluno.bs  && <Badge label="Benef." type="green" />}
+        {aluno.ePcd === "Sim" && <Badge label="PCD"    type="amber" style={{ marginRight: 4 }} />}
+        {aluno.recebeBeneficio === "Sim"  && <Badge label="Benef." type="green" />}
       </td>
       <td style={{ padding: "11px 14px" }}>
         <button
@@ -63,14 +75,37 @@ function AlunoRow({ aluno, onOpen }) {
   );
 }
 
-export function TabAlunos({ onOpen }) {
-  const {
-    query, setQuery,
-    filPcd, setFilPcd,
-    filBs,  setFilBs,
-    page,   setPage, totalPages,
-    filtered, slice, start, end,
-  } = useAlunosFiltrados();
+  const { dados, loading, error } = useDadosBanco();
+  // Filtros e busca locais
+  const [query, setQuery] = React.useState("");
+  const [filPcd, setFilPcd] = React.useState(false);
+  const [filBs, setFilBs] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const pageSize = 10;
+
+  // Filtragem
+  const filtered = React.useMemo(() => {
+    if (!Array.isArray(dados)) return [];
+    return dados.filter(a => {
+      const matchQuery = query === "" ||
+        (a.nome && a.nome.toLowerCase().includes(query.toLowerCase())) ||
+        (a.email && a.email.toLowerCase().includes(query.toLowerCase())) ||
+        (a.telefone && a.telefone.toLowerCase().includes(query.toLowerCase()));
+      const matchPcd = !filPcd || a.ePcd === "Sim";
+      const matchBs = !filBs || a.recebeBeneficio === "Sim";
+      return matchQuery && matchPcd && matchBs;
+    });
+  }, [dados, query, filPcd, filBs]);
+
+  // Paginação
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const start = (page - 1) * pageSize + 1;
+  const end = Math.min(page * pageSize, filtered.length);
+  const slice = filtered.slice(start - 1, end);
+
+  if (loading) return <div>Carregando...</div>;
+  if (error) return <div>Erro ao carregar dados</div>;
+  if (!Array.isArray(dados)) return <div>Dados inválidos recebidos da API</div>;
 
   return (
     <div>
