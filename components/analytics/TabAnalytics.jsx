@@ -48,7 +48,7 @@ function GeneroChart() {
 
   
   const data = Array.isArray(dados) && dados.length > 0 ? [
-    { name: "Feminino", value: dados.filter(d => d.identidadeDeGenero === 'MULHER (gênero de nascimento)').length, color: "#1D9E75", fill: "#1D9E75" },
+    { name: "Feminino", value: dados.filter(d => d.identidadeDeGenero === 'MULHER (gênero de nascimento)').length, color: "#f095d7", fill: "#f095d7" },
     { name: "Masculino", value: dados.filter(d => d.identidadeDeGenero === 'HOMEM (gênero de nascimento)').length, color: "#1D4ED8", fill: "#1D4ED8" },
     { name: "Outro", value: dados.filter(d => d.identidadeDeGenero !== 'MULHER (gênero de nascimento)' && d.identidadeDeGenero !== 'HOMEM (gênero de nascimento)').length, color: "#D85A30", fill: "#D85A30" },
   ] : [];
@@ -202,7 +202,7 @@ function IdadeChart() {
           <XAxis dataKey="faixa" tick={{ fontSize: 12, fill: "#6B7280" }} axisLine={false} tickLine={false} />
           <YAxis tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="alunos" fill={C.blue} radius={[3, 3, 0, 0]} />
+          <Bar dataKey="alunos" fill="#3ec964" radius={[3, 3, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartCard>

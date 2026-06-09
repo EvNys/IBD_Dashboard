@@ -8,8 +8,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
-  title: "EduAdmin — Painel Administrativo",
-  description: "Gestão de alunos para instituições de ensino",
+  title: "Dashboard IBD — Painel Administrativo",
+  description: "Gestão de alunos para o Instituto Benjamim Dias",
 };
 
 export default function RootLayout({ children }) {
