@@ -195,7 +195,7 @@ function IdadeChart() {
 
   return (
     <ChartCard title="Faixa Etária" sub="Distribuição por grupos de idade"
-      legend={[{ label: "Alunos", color: C.blue }]}> 
+      legend={[{ label: "Alunos", color: "#3ec964" }]}> 
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" vertical={false} />
